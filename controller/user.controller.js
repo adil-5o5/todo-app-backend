@@ -11,6 +11,21 @@ exports.register = async (req, res) => {
         // Extract email and password from request body
         const { email, password } = req.body;
 
+        // Validate input
+        if (!email || !password) {
+            return res.status(400).json({ 
+                status: false, 
+                error: "Email and password are required" 
+            });
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({ 
+                status: false, 
+                error: "Password must be at least 6 characters" 
+            });
+        }
+
         // Call service to register user (this will hash the password)
         const user = await UserService.registerUser(email, password);
 
@@ -18,7 +33,10 @@ exports.register = async (req, res) => {
         res.json({
             status: true,
             message: "✅ User registered successfully",
-            data: user
+            data: {
+                _id: user._id,
+                email: user.email
+            }
         });
 
     } catch (err) {
@@ -37,16 +55,24 @@ exports.login = async (req, res) => {
         // Extract email and password from request body
         const { email, password } = req.body;
 
+        // Validate input
+        if (!email || !password) {
+            return res.status(400).json({ 
+                status: false, 
+                error: "Email and password are required" 
+            });
+        }
+
         // Check if user exists in database
         const user = await UserService.checkusers(email);
         if (!user) {
-            return res.status(400).json({ status: false, message: "User doesn't exist" });
+            return res.status(400).json({ status: false, error: "User doesn't exist" });
         }
 
         // Compare provided password with hashed password in database
         const isMatch = await user.comparepassword(password);
         if (!isMatch) {
-            return res.status(400).json({ status: false, message: "Invalid password" });
+            return res.status(400).json({ status: false, error: "Invalid password" });
         }
 
         // Generate JWT token for authentication
@@ -58,7 +84,10 @@ exports.login = async (req, res) => {
             status: true,
             message: "✅ Login successful",
             token: token,
-            data: user
+            data: {
+                _id: user._id,
+                email: user.email
+            }
         });
 
     } catch (err) {

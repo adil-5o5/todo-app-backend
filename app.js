@@ -8,11 +8,23 @@ const ToDoRouter = require('./routers/todo.routes');    // Todo-related routes
 const app = express();
 
 // Enable CORS for all routes (allows frontend to make requests)
-app.use(cors());
+app.use(cors({
+  origin: '*', // Allow all origins for mobile apps
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
 
 // Middleware to parse JSON request bodies
 // This allows us to access req.body in our route handlers
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
+});
 
 // Mount routes - Define URL prefixes for different route groups
 // All user routes will start with '/' (e.g., /registration, /login, /users, /logout)
@@ -20,6 +32,46 @@ app.use('/', userRouter);
 
 // All todo routes will start with '/' (e.g., /todo, /todos, /deletetodo)
 app.use('/', ToDoRouter);
+
+// Health check endpoint for deployment platforms
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    message: 'Server is running',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Todo API Server',
+    version: '1.0.0',
+    endpoints: {
+      auth: ['POST /registration', 'POST /login', 'GET /logout'],
+      todos: ['POST /todo', 'GET /todos', 'DELETE /deletetodo']
+    }
+  });
+});
+
+// Global error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Global error handler:', err);
+  res.status(500).json({
+    status: false,
+    error: 'Internal server error',
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
+  });
+});
+
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({
+    status: false,
+    error: 'Route not found',
+    path: req.originalUrl
+  });
+});
 
 // Export the configured Express app
 module.exports = app;

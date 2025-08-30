@@ -75,7 +75,8 @@ class UserService {
      * @returns {String} JWT token
      */
     static async generateToken(tokenData, secretKey, jwt_expire) {
-        return jwt.sign(tokenData, secretKey, { expiresIn: jwt_expire });
+        const secret = process.env.JWT_SECRET || secretKey;
+        return jwt.sign(tokenData, secret, { expiresIn: jwt_expire });
     }
 }
 
