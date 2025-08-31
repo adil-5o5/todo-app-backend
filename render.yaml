@@ -10,4 +10,5 @@ services:
       - key: PORT
         value: 3000
       - key: JWT_SECRET
-        value: your_super_secret_jwt_key_here
+        value: wJ3+uO/ZFt4j1x2bL7bQmMbnA1LZk8K+7q8Vt9vHgxw=
+
