@@ -1,6 +1,12 @@
 const app = require('./app');           // Import the configured Express app
 const connectDB = require('./config/db'); // Import database connection function
 
+// Set default JWT secret for local development if not provided
+if (!process.env.JWT_SECRET) {
+    process.env.JWT_SECRET = 'your_super_secret_jwt_key_here_change_this_in_production';
+    console.log('⚠️  Using default JWT_SECRET for development - CHANGE THIS IN PRODUCTION!');
+}
+
 // Check required environment variables
 console.log('🔍 Checking environment variables...');
 console.log('🌍 NODE_ENV:', process.env.NODE_ENV || 'development');

@@ -111,10 +111,17 @@ git push origin main
 
 ### **Local Testing:**
 ```bash
-# Set environment variables locally
-$env:MONGODB_URI="mongodb+srv://username:password@cluster.mongodb.net/todoapp"
-$env:JWT_SECRET="your_secret_key"
+# Option 1: Use the setup script (Windows PowerShell)
+.\setup-local-env.ps1
+
+# Option 2: Use the batch file (Windows Command Prompt)
+setup-local-env.bat
+
+# Option 3: Set manually (PowerShell)
 $env:NODE_ENV="development"
+$env:PORT="3000"
+$env:JWT_SECRET="your_super_secret_jwt_key_here_change_this_in_production"
+$env:MONGODB_URI="mongodb://localhost:27017/todoapp"
 
 # Start server
 npm run dev
