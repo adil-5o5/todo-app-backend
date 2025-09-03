@@ -26,14 +26,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Mount routes - Define URL prefixes for different route groups
-// All user routes will start with '/' (e.g., /registration, /login, /users, /logout)
-app.use('/', userRouter);
-
-// All todo routes will start with '/' (e.g., /todo, /todos, /deletetodo)
-app.use('/', ToDoRouter);
-
-// Health check endpoint for deployment platforms
+// Health check endpoint for deployment platforms (must come BEFORE routes)
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 
@@ -42,7 +35,7 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Root endpoint
+// Root endpoint (must come BEFORE routes)
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Todo API Server',
@@ -53,6 +46,13 @@ app.get('/', (req, res) => {
     }
   });
 });
+
+// Mount routes - Define URL prefixes for different route groups
+// All user routes will start with '/' (e.g., /registration, /login, /users, /logout)
+app.use('/', userRouter);
+
+// All todo routes will start with '/' (e.g., /todo, /todos, /deletetodo)
+app.use('/', ToDoRouter);
 
 // Global error handling middleware
 app.use((err, req, res, next) => {
@@ -72,6 +72,8 @@ app.use('*', (req, res) => {
     path: req.originalUrl
   });
 });
+
+
 
 // Export the configured Express app
 module.exports = app;

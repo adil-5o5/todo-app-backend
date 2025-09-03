@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 // Replace with your deployed server URL
-const BASE_URL = 'https://your-app-name.onrender.com';
+const BASE_URL = 'https://todo-app-backend-znw7.onrender.com';
 
 async function testAPI() {
   console.log('🧪 Testing Todo API...\n');
