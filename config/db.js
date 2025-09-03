@@ -13,22 +13,22 @@ async function connectDB() {
         console.log("🔌 Attempting to connect to MongoDB...");
         console.log("📊 URI:", mongoURI.includes('mongodb+srv') ? 'MongoDB Atlas (Cloud)' : 'Local MongoDB');
         
+        // For local development, skip MongoDB connection if not available
+        if (!process.env.MONGODB_URI && process.env.NODE_ENV !== 'production') {
+            console.log("⚠️  Skipping MongoDB connection for local development");
+            console.log("💡 Set MONGODB_URI environment variable to connect to MongoDB");
+            return;
+        }
+        
         await mongoose.connect(mongoURI, {
             useNewUrlParser: true,      // Use new URL parser
             useUnifiedTopology: true,   // Use new server discovery and monitoring engine
             serverSelectionTimeoutMS: 15000, // 15 seconds timeout
-            socketTimeoutMS: 45000,     // 45 seconds socket timeout
-            bufferCommands: false,      // Disable mongoose buffering
-            bufferMaxEntries: 0        // Disable mongoose buffering
+            socketTimeoutMS: 45000      // 45 seconds socket timeout
         });
         
         console.log("✅ MongoDB connected successfully");
         console.log("📊 Database: Connected to cloud database");
-        
-        // Test the connection
-        const adminDb = mongoose.connection.db.admin();
-        const result = await adminDb.ping();
-        console.log("🏓 Database ping result:", result);
         
     } catch (err) {
         // If connection fails, log the error and exit the process
@@ -36,7 +36,13 @@ async function connectDB() {
         console.error("💡 Check your MONGODB_URI environment variable");
         console.error("💡 Make sure your MongoDB Atlas cluster is accessible");
         console.error("💡 Check if your IP is whitelisted in MongoDB Atlas");
-        process.exit(1); // Exit with error code 1
+        
+        // Only exit in production
+        if (process.env.NODE_ENV === 'production') {
+            process.exit(1);
+        } else {
+            console.log("⚠️  Continuing without database connection for local development");
+        }
     }
 }
 

@@ -64,8 +64,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler - catch all unmatched routes
-app.use('*', (req, res) => {
+// 404 handler - catch all unmatched routes (Express 4 compatible)
+app.use((req, res) => {
   res.status(404).json({
     status: false,
     error: 'Route not found',
