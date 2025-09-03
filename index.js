@@ -3,7 +3,7 @@ const connectDB = require('./config/db'); // Import database connection function
 
 // Set default JWT secret for local development if not provided
 if (!process.env.JWT_SECRET) {
-    process.env.JWT_SECRET = 'your_super_secret_jwt_key_here_change_this_in_production';
+    process.env.JWT_SECRET = '8353d26e0750e7e36caac8af7398b06c2f9fe91694aec24273b6bcedb49bbc857c4df04df36989669d06f6e0abc37fdfd266a09ffe65eaf86dd742b578e1aa54';
     console.log('⚠️  Using default JWT_SECRET for development - CHANGE THIS IN PRODUCTION!');
 }
 
