@@ -4,12 +4,15 @@ const connectDB = require('./config/db'); // Import database connection function
 // Check required environment variables
 console.log('🔍 Checking environment variables...');
 console.log('🌍 NODE_ENV:', process.env.NODE_ENV || 'development');
-console.log('🚪 PORT:', process.env.PORT || 3000);
+console.log('🚪 PORT:', process.env.PORT || 'Not Set (using default 3000)');
 console.log('🗄️  MONGODB_URI:', process.env.MONGODB_URI ? '✅ Set' : '❌ Missing');
 console.log('🔑 JWT_SECRET:', process.env.JWT_SECRET ? '✅ Set' : '❌ Missing');
 
 // Define the port number for the server (use environment variable for production)
-const port = process.env.PORT || 3000;
+// Force port 3000 for local development to avoid conflicts
+const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 3000) : 3000;
+console.log('🔌 Final port being used:', port);
+console.log('🔒 Port override applied for development');
 
 // Connect to MongoDB database
 // This establishes the connection before starting the server

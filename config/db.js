@@ -20,8 +20,6 @@ async function connectDB() {
         }
         
         await mongoose.connect(mongoURI, {
-            useNewUrlParser: true,      // Use new URL parser
-            useUnifiedTopology: true,   // Use new server discovery and monitoring engine
             serverSelectionTimeoutMS: 15000, // 15 seconds timeout
             socketTimeoutMS: 45000      // 45 seconds socket timeout
         });
