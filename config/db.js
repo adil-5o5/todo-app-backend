@@ -25,7 +25,7 @@ async function connectDB() {
         });
         
         console.log("✅ MongoDB connected successfully");
-        console.log("📊 Database: Connected to cloud database");
+        console.log("📊 Database:", mongoURI.includes('mongodb+srv') ? 'MongoDB Atlas (Cloud)' : 'Local MongoDB');
         
         // Set global flag for database status
         global.dbConnected = true;
@@ -43,9 +43,12 @@ async function connectDB() {
         // Only exit in production
         if (process.env.NODE_ENV === 'production') {
             console.error("🚨 Production environment requires database connection");
+            console.error("💡 Check your MONGODB_URI environment variable on Render");
+            console.error("💡 Make sure MongoDB Atlas is accessible and IP is whitelisted");
             process.exit(1);
         } else {
             console.log("⚠️  Continuing without database connection for local development");
+            console.log("💡 Server will start but database operations will fail");
         }
     }
 }

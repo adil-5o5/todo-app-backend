@@ -63,10 +63,49 @@ Replace the placeholder values in `render.yaml`:
 ```
 
 ### **Step 2: Deploy**
-1. Commit and push your changes
-2. Go to [render.com](https://render.com)
-3. Connect your GitHub repository
-4. Render will auto-deploy using your `render.yaml`
+1. **Commit and push your changes:**
+   ```bash
+   git add .
+   git commit -m "Fix production environment and database connection issues"
+   git push origin main
+   ```
+
+2. **Go to [render.com](https://render.com)**
+3. **Connect your GitHub repository**
+4. **Render will auto-deploy using your `render.yaml`**
+
+### **Step 3: Verify Deployment**
+After deployment, test your endpoints:
+```bash
+node test-deployed-server.js
+```
+
+## 🚨 **Common Render Deployment Issues:**
+
+### **Issue 1: "nothing to commit, working tree clean"**
+**Cause:** No changes detected by Git
+**Solution:** 
+```bash
+# Check status
+git status
+
+# If no changes, make a small change and commit
+echo "# Updated $(date)" >> README.md
+git add .
+git commit -m "Update deployment configuration"
+git push origin main
+```
+
+### **Issue 2: Database Connection Failed**
+**Cause:** Invalid MONGODB_URI or network access
+**Solution:**
+1. Check MongoDB Atlas IP whitelist (add `0.0.0.0/0`)
+2. Verify username/password in connection string
+3. Ensure cluster is running
+
+### **Issue 3: Port Already in Use**
+**Cause:** Render expects port 10000, not 3000
+**Solution:** Use `PORT: 10000` in render.yaml (already fixed)
 
 ## 🧪 **Testing Your Setup:**
 
