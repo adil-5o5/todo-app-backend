@@ -10,5 +10,7 @@ services:
       - key: PORT
         value: 3000
       - key: JWT_SECRET
-        value: wJ3+uO/ZFt4j1x2bL7bQmMbnA1LZk8K+7q8Vt9vHgxw=
+        value: f7d8e9c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b1a0f9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b1a0
+      - key: MONGODB_URI
+        value: mongodb+srv://username:password@cluster.mongodb.net/todoapp
 
