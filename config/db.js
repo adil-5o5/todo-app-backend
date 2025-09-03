@@ -13,11 +13,10 @@ async function connectDB() {
         console.log("🔌 Attempting to connect to MongoDB...");
         console.log("📊 URI:", mongoURI.includes('mongodb+srv') ? 'MongoDB Atlas (Cloud)' : 'Local MongoDB');
         
-        // For local development, skip MongoDB connection if not available
+        // For local development, try to connect but don't fail if unavailable
         if (!process.env.MONGODB_URI && process.env.NODE_ENV !== 'production') {
-            console.log("⚠️  Skipping MongoDB connection for local development");
-            console.log("💡 Set MONGODB_URI environment variable to connect to MongoDB");
-            return;
+            console.log("⚠️  No MONGODB_URI set - trying local MongoDB connection");
+            console.log("💡 Set MONGODB_URI environment variable for cloud database");
         }
         
         await mongoose.connect(mongoURI, {
@@ -30,15 +29,22 @@ async function connectDB() {
         console.log("✅ MongoDB connected successfully");
         console.log("📊 Database: Connected to cloud database");
         
+        // Set global flag for database status
+        global.dbConnected = true;
+        
     } catch (err) {
-        // If connection fails, log the error and exit the process
+        // If connection fails, log the error and handle gracefully
         console.error("❌ MongoDB connection error:", err.message);
         console.error("💡 Check your MONGODB_URI environment variable");
         console.error("💡 Make sure your MongoDB Atlas cluster is accessible");
         console.error("💡 Check if your IP is whitelisted in MongoDB Atlas");
         
+        // Set global flag for database status
+        global.dbConnected = false;
+        
         // Only exit in production
         if (process.env.NODE_ENV === 'production') {
+            console.error("🚨 Production environment requires database connection");
             process.exit(1);
         } else {
             console.log("⚠️  Continuing without database connection for local development");
